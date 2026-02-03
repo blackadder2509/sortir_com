@@ -15,7 +15,8 @@
 ###< phpunit/phpunit ###
 
 ###> symfony/asset-mapper ###
-/public/assets
+/public/assets/
+/assets/vendor/
 ###< symfony/asset-mapper ###
 
 ###>Suppression de la config###
