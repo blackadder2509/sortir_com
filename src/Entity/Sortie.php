@@ -20,7 +20,6 @@ class Sortie
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateHeureDebut = null;
 
-    // J'ai simplifié cette ligne pour éviter l'erreur "Undefined index"
     #[ORM\ManyToOne(targetEntity: Campus::class)]
     private ?Campus $campus = null;
 
@@ -37,8 +36,23 @@ class Sortie
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
+
         return $this;
     }
+
+    // VOICI LES FONCTIONS QUI MANQUAIENT :
+    public function getDateHeureDebut(): ?\DateTimeInterface
+    {
+        return $this->dateHeureDebut;
+    }
+
+    public function setDateHeureDebut(?\DateTimeInterface $dateHeureDebut): self
+    {
+        $this->dateHeureDebut = $dateHeureDebut;
+
+        return $this;
+    }
+    // FIN DES AJOUTS
 
     public function getCampus(): ?Campus
     {
@@ -48,6 +62,7 @@ class Sortie
     public function setCampus(?Campus $campus): self
     {
         $this->campus = $campus;
+
         return $this;
     }
 }
