@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block body %}
+    <div style="text-align: center; margin-top: 50px;">
+        <h1>Bienvenue sur Sortir.com !</h1>
+        <p>Le site est en construction, mais la recherche fonctionne.</p>
+
+        <a href="{{ path('app_sortie_index') }}" style="font-size: 20px; color: blue;">
+            ➡️ Aller voir la liste des sorties (C'est ici qu'on travaille)
+        </a>
+    </div>
+{% endblock %}
