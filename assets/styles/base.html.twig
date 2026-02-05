@@ -10,7 +10,24 @@
         {% block javascripts %}
         {% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
+    <body class="d-flex flex-column">
+            <header>
+                    <a class = container>
+                            <h1>
+
+                            </h1>
+                    </a>
+        {% include('_navbar.html.twig') %}
+            </header>
+            <main class="container">
+                    <div>
+                {% block body %}{% endblock %}
+                    </div>
+            </main>
+            <footer>
+                    <div class="container">
+
+                    </div>
+            </footer>
     </body>
 </html>
