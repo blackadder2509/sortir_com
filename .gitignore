@@ -18,3 +18,11 @@
 /public/assets/
 /assets/vendor/
 ###< symfony/asset-mapper ###
+<<<<<<< HEAD
+=======
+
+###>Suppression de la config###
+.idea/
+###<Suppression de la config###
+
+>>>>>>> 36a4293e1a9bb7a7545a4bbefbe00ef463bcbc97

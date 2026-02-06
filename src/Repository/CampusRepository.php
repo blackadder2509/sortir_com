@@ -15,6 +15,7 @@ class CampusRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Campus::class);
     }
+<<<<<<< HEAD
 
     //    /**
     //     * @return Campus[] Returns an array of Campus objects
@@ -40,4 +41,6 @@ class CampusRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+=======
+>>>>>>> 36a4293e1a9bb7a7545a4bbefbe00ef463bcbc97
 }

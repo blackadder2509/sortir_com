@@ -8,4 +8,10 @@ when@dev:
 
 when@test:
     framework:
+<<<<<<< HEAD
         profiler: { collect: false }
+=======
+        profiler:
+            collect: false
+            collect_serializer_data: true
+>>>>>>> 36a4293e1a9bb7a7545a4bbefbe00ef463bcbc97
