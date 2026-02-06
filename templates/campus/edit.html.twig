@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier un Campus{% endblock %}
+
+{% block body %}
+    <div style="margin: 50px;">
+        <h1>Modifier le campus</h1>
+
+        {{ form_start(campusForm) }}
+        {{ form_widget(campusForm) }}
+        <button type="submit">Enregistrer les modifications</button>
+        {{ form_end(campusForm) }}
+
+        <br>
+        <a href="{{ path('app_campus') }}">Retour à la liste</a>
+    </div>
+{% endblock %}
