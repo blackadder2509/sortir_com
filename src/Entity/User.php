@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -17,34 +18,35 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\Email(message: 'Mail invalide')]
+    #[Assert\NotBlank]
     private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
 
     #[ORM\Column(length: 180)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 8, max: 50, minMessage: "Minimum 8 caractères svp")]
     private ?string $username = null;
 
     #[ORM\Column(length: 50)]
-    private ?string $name = null;
+    private ?string $nom = null;
 
-    #[ORM\Column(length: 80)]
-    private ?string $firstname = null;
+    #[ORM\Column(length: 60)]
+    private ?string $prenom = null;
 
-    #[ORM\Column(length: 11, nullable: true)]
-    private ?string $phone = null;
+    #[ORM\Column(length: 15, nullable: true)]
+    private ?string $telephone = null;
 
     #[ORM\Column]
-    private ?bool $actif = null;
+    private ?bool $administrateur = false;
+
+    #[ORM\Column]
+    private ?bool $actif = true;
 
     public function getId(): ?int
     {
@@ -59,45 +61,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
-
+        if ($this->administrateur) {
+            $roles[] = 'ROLE_ADMIN';
+        }
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
     public function setRoles(array $roles): static
     {
         $this->roles = $roles;
-
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string
     {
         return $this->password;
@@ -106,25 +93,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
-    public function __serialize(): array
-    {
-        $data = (array) $this;
-        $data["\0".self::class."\0password"] = hash('crc32c', $this->password);
-
-        return $data;
-    }
-
-    #[\Deprecated]
     public function eraseCredentials(): void
     {
-        // @deprecated, to be removed when upgrading to Symfony 8
     }
 
     public function getUsername(): ?string
@@ -135,43 +108,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUsername(string $username): static
     {
         $this->username = $username;
-
         return $this;
     }
 
-    public function getName(): ?string
+    public function getNom(): ?string
     {
-        return $this->name;
+        return $this->nom;
     }
 
-    public function setName(string $name): static
+    public function setNom(string $nom): static
     {
-        $this->name = $name;
-
+        $this->nom = $nom;
         return $this;
     }
 
-    public function getFirstname(): ?string
+    public function getPrenom(): ?string
     {
-        return $this->firstname;
+        return $this->prenom;
     }
 
-    public function setFirstname(string $firstname): static
+    public function setPrenom(string $prenom): static
     {
-        $this->firstname = $firstname;
-
+        $this->prenom = $prenom;
         return $this;
     }
 
-    public function getPhone(): ?string
+    public function getTelephone(): ?string
     {
-        return $this->phone;
+        return $this->telephone;
     }
 
-    public function setPhone(?string $phone): static
+    public function setTelephone(?string $telephone): static
     {
-        $this->phone = $phone;
+        $this->telephone = $telephone;
+        return $this;
+    }
 
+    public function isAdministrateur(): ?bool
+    {
+        return $this->administrateur;
+    }
+
+    public function setAdministrateur(bool $administrateur): static
+    {
+        $this->administrateur = $administrateur;
         return $this;
     }
 
@@ -183,7 +163,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActif(bool $actif): static
     {
         $this->actif = $actif;
-
         return $this;
     }
 }
