@@ -4,26 +4,33 @@
 
 {% block body %}
     <div style="margin: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h1>Liste des sorties</h1>
-            <a href="{{ path('app_sortie_new') }}" class="btn">Créer une sortie</a>
+            <a href="{{ path('app_sortie_new') }}" class="btn btn-primary">
+                + Créer une sortie
+            </a>
         </div>
 
-        {# Formulaire de recherche #}
+        {# Ta barre de recherche #}
         <div style="background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 8px;">
             {{ form_start(form) }}
-            {{ form_row(form.q) }}
-            {{ form_row(form.campus) }}
-            <button type="submit">Rechercher</button>
+            <div class="d-flex gap-2">
+                {{ form_row(form.q, {'label': false, 'attr': {'placeholder': 'Rechercher...'}}) }}
+                {{ form_row(form.campus, {'label': false}) }}
+                <button type="submit" class="btn btn-dark">Rechercher</button>
+            </div>
             {{ form_end(form) }}
         </div>
 
-        {# Tableau des résultats #}
-        <table border="1" style="width: 100%; border-collapse: collapse;">
-            <thead>
+        {# Le Tableau Complet #}
+        <table class="table table-striped table-bordered table-hover">
+            <thead class="table-dark">
             <tr>
                 <th>Nom</th>
                 <th>Date</th>
+                <th>Clôture</th>
+                <th>Inscrits</th>
+                <th>État</th>
                 <th>Campus</th>
                 <th>Actions</th>
             </tr>
@@ -33,17 +40,44 @@
                 <tr>
                     <td>{{ sortie.nom }}</td>
                     <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
+                    <td>{{ sortie.dateLimiteInscription ? sortie.dateLimiteInscription|date('d/m/Y') : '-' }}</td>
+                    <td>
+                        {{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax|default('-') }}
+                    </td>
+                    <td>
+                        {% if sortie.etat %}
+                            <span class="badge bg-info text-dark">{{ sortie.etat.libelle }}</span>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
                     <td>{{ sortie.campus.nom }}</td>
                     <td>
-                        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                        <div class="d-flex gap-1 flex-column">
+                            <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="btn btn-sm btn-secondary">Modifier</a>
+
+                            {% if sortie.etat and sortie.etat.libelle == 'En création' %}
+                                <a href="{{ path('app_sortie_publier', {'id': sortie.id}) }}" class="btn btn-sm btn-success">🚀 Publier</a>
+                            {% endif %}
+
+                            {% if sortie.etat and sortie.etat.libelle == 'Ouverte' %}
+                                {% if app.user %}
+                                    {% if app.user in sortie.participants %}
+                                        <a href="{{ path('app_sortie_desister', {'id': sortie.id}) }}" class="btn btn-sm btn-danger">Se désister</a>
+                                    {% else %}
+                                        <a href="{{ path('app_sortie_inscrire', {'id': sortie.id}) }}" class="btn btn-sm btn-primary">🤚 S'inscrire</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
             {% else %}
-                <tr>
-                    <td colspan="4">Aucune sortie trouvée.</td>
-                </tr>
+                <tr><td colspan="7" class="text-center">Aucune sortie trouvée.</td></tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
 {% endblock %}
+
+

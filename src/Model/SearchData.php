@@ -6,6 +6,13 @@ use App\Entity\Campus;
 
 class SearchData
 {
-    public ?string $q = '';
-    public ?Campus $campus = null;
+    /**
+     * @var string|null
+     */
+    public $q = '';
+
+    /**
+     * @var Campus|null
+     */
+    public $campus;
 }

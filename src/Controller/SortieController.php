@@ -3,43 +3,32 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
-use App\Form\SearchType;
+use App\Entity\Etat;
 use App\Form\SortieType;
+use App\Form\SearchType;
 use App\Model\SearchData;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/sortie')]
+#[Route('/sorties')]
 class SortieController extends AbstractController
 {
     #[Route('/', name: 'app_sortie_index', methods: ['GET'])]
     public function index(SortieRepository $sortieRepository, Request $request): Response
     {
-        // Gestion du filtre
-        $searchData = new SearchData();
-        $form = $this->createForm(SearchType::class, $searchData);
+        // Gestion du formulaire de recherche
+        $data = new SearchData();
+        $form = $this->createForm(SearchType::class, $data);
         $form->handleRequest($request);
 
-        // Récupération des sorties filtrées ou totales
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Note: Idéalement, faire une méthode findSearch() dans le Repository
-            // Ici je fais simple via le QueryBuilder directement
-            $sorties = $sortieRepository->createQueryBuilder('s')
-                ->where('s.nom LIKE :q')
-                ->andWhere('(:campus IS NULL OR s.campus = :campus)')
-                ->setParameter('q', "%{$searchData->q}%")
-                ->setParameter('campus', $searchData->campus)
-                ->getQuery()
-                ->getResult();
-        } else {
-            $sorties = $sortieRepository->findAll();
-        }
+        // TODO: Plus tard, tu remplaceras findAll() par une méthode findSearch($data)
+        $sorties = $sortieRepository->findAll();
 
-        return $this->render('list.html.twig', [ // Votre template fourni
+        return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
             'form' => $form->createView(),
         ]);
@@ -53,14 +42,36 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // 1. Assigner l'organisateur (toi)
+            $sortie->setOrganisateur($this->getUser());
+
+            // 2. Assigner l'état "En création"
+            $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'En création']);
+            if ($etat) {
+                $sortie->setEtat($etat);
+            }
+
             $entityManager->persist($sortie);
             $entityManager->flush();
-            return $this->redirectToRoute('app_sortie_index');
+
+            // Message flash pour confirmer
+            $this->addFlash('success', 'La sortie a bien été créée !');
+
+            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('sortie/new.html.twig', [
             'sortie' => $sortie,
             'form' => $form->createView(),
+        ]);
+    }
+
+    #[Route('/{id}', name: 'app_sortie_show', methods: ['GET'])]
+    public function show(Sortie $sortie): Response
+    {
+        return $this->render('sortie/show.html.twig', [
+            'sortie' => $sortie,
         ]);
     }
 
@@ -72,22 +83,12 @@ class SortieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-            return $this->redirectToRoute('app_sortie_index');
+            return $this->redirectToRoute('app_sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('sortie/edit.html.twig', [
             'sortie' => $sortie,
             'form' => $form->createView(),
         ]);
-    }
-
-    #[Route('/{id}', name: 'app_sortie_delete', methods: ['POST'])]
-    public function delete(Request $request, Sortie $sortie, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($sortie);
-            $entityManager->flush();
-        }
-        return $this->redirectToRoute('app_sortie_index');
     }
 }
