@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des Campus{% endblock %}
+
+{% block body %}
+    <div style="margin: 50px;">
+        <h1>Gestion des Campus</h1>
+
+        <div style="background: #f0f0f0; padding: 20px; margin-bottom: 20px;">
+            <h3>Ajouter un campus</h3>
+            {{ form_start(campusForm) }}
+            {{ form_widget(campusForm) }}
+            <button type="submit">Ajouter</button>
+            {{ form_end(campusForm) }}
+        </div>
+
+        <h2>Liste des Campus</h2>
+        <ul>
+            {% for c in campus %}
+                <li>
+                    {{ c.nom }}
+                    - <a href="{{ path('app_campus_edit', {'id': c.id}) }}">Modifier</a>
+                    - <a href="{{ path('app_campus_delete', {'id': c.id}) }}"
+                         style="color: red; margin-left: 5px;"
+                         onclick="return confirm('Es-tu sûre de vouloir supprimer ce campus ?');">
+                        Supprimer
+                    </a>
+                </li>
+            {% else %}
+                <li>Aucun campus trouvé !</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

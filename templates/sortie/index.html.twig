@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sorties{% endblock %}
+
+{% block body %}
+    <div style="margin: 20px;">
+        <h1>Rechercher une sortie</h1>
+
+        {# Affiche le formulaire #}
+        <div style="background: #f0f0f0; padding: 20px; border-radius: 8px;">
+            {{ form_start(form) }}
+            {{ form_row(form.q, {'label': 'Rechercher par mot-clé :'}) }}
+            {{ form_row(form.campus, {'label': 'Choisir un campus :'}) }}
+            <button type="submit" class="btn">Rechercher</button>
+            {{ form_end(form) }}
+        </div>
+
+        <h2>Résultats</h2>
+
+        {# Affiche la liste des sorties trouvées #}
+        <table border="1" style="width: 100%; border-collapse: collapse;">
+            <thead>
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date</th>
+                <th>Campus</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sortie in sorties %}
+                <tr>
+                    <td>{{ sortie.nom }}</td>
+                    <td>
+                        {% if sortie.dateHeureDebut %}
+                            {{ sortie.dateHeureDebut|date('d/m/Y H:i') }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if sortie.campus %}
+                            {{ sortie.campus.nom }}
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3" style="text-align: center;">Aucune sortie trouvée pour cette recherche.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
