@@ -35,4 +35,7 @@ return [
     'stimulus' => [
         'version' => '3.2.2',
     ],
+    'bootstrap' => [
+        'version' => '5.3.8',
+    ],
 ];
