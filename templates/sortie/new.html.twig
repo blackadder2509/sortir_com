@@ -1,16 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Nouvelle Sortie{% endblock %}
+{% block title %}Créer une sortie{% endblock %}
 
 {% block body %}
     <div style="margin: 20px;">
         <h1>Créer une nouvelle sortie</h1>
 
+        {# Affiche le formulaire #}
         {{ form_start(form) }}
         {{ form_widget(form) }}
-        <button class="btn">Enregistrer</button>
+        <button type="submit" class="btn" style="margin-top: 10px;">Enregistrer</button>
         {{ form_end(form) }}
 
+        <br>
         <a href="{{ path('app_sortie_index') }}">Retour à la liste</a>
     </div>
 {% endblock %}
