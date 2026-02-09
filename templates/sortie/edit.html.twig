@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier la Sortie{% endblock %}
+
+{% block body %}
+    <div style="margin: 20px;">
+        <h1>Modifier la sortie</h1>
+
+        {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn">Mettre à jour</button>
+        {{ form_end(form) }}
+
+        {# Formulaire de suppression sécurisé par CSRF #}
+        <form method="post" action="{{ path('app_sortie_delete', {'id': sortie.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');" style="margin-top: 10px;">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ sortie.id) }}">
+            <button class="btn btn-danger">Supprimer</button>
+        </form>
+
+        <a href="{{ path('app_sortie_index') }}">Retour à la liste</a>
+    </div>
+{% endblock %}
