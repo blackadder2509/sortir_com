@@ -30,28 +30,27 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
     public const LOGIN_ROUTE = 'app_login';
 
     public function __construct(
-        private UrlGeneratorInterface $urlGenerator,
-        private UserRepository $userRepository
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UserRepository $userRepository
     ) {
     }
 
     public function authenticate(Request $request): Passport
     {
-        $identifier = $request->getPayload()->getString('email');
-        $password = $request->getPayload()->getString('password');
+        $identifier = $request->getPayload()->getString('_username');
+        $password = $request->getPayload()->getString('_password');
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $identifier);
 
         return new Passport(
             new UserBadge($identifier, function($userIdentifier) {
-                $user = $this->userRepository->loadUserByIdentifier($userIdentifier);
+                $user = $this->userRepository->findOneByEmailOrUsername($userIdentifier);
 
                 if (!$user) {
                     throw new UserNotFoundException();
                 }
 
                 if (!$user->isActif()) {
-                    // C'est ici qu'on gère le point n°1 de ton cahier des charges
                     throw new CustomUserMessageAuthenticationException("Ce compte est désactivé.");
                 }
 
@@ -71,14 +70,11 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // Correction : Utilisez le NOM de la route, pas l'URL
-        // Si ta route pour /campus s'appelle 'app_campus_index' :
-        return new RedirectResponse($this->urlGenerator->generate('app_campus_index'));
+        return new RedirectResponse($this->urlGenerator->generate(name: 'app_sortie_index'));
     }
 
     protected function getLoginUrl(Request $request): string
     {
-        //TODO mettre la route vers campus pour le login
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
 }
