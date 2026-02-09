@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SortieRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Campus;
 
 #[ORM\Entity(repositoryClass: SortieRepository::class)]
 class Sortie
@@ -40,7 +41,6 @@ class Sortie
         return $this;
     }
 
-    // VOICI LES FONCTIONS QUI MANQUAIENT :
     public function getDateHeureDebut(): ?\DateTimeInterface
     {
         return $this->dateHeureDebut;
@@ -52,7 +52,6 @@ class Sortie
 
         return $this;
     }
-    // FIN DES AJOUTS
 
     public function getCampus(): ?Campus
     {

@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sorties{% endblock %}
+
+{% block body %}
+    <div style="margin: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1>Liste des sorties</h1>
+            <a href="{{ path('app_sortie_new') }}" class="btn">Créer une sortie</a>
+        </div>
+
+        {# Formulaire de recherche #}
+        <div style="background: #f0f0f0; padding: 20px; margin: 20px 0; border-radius: 8px;">
+            {{ form_start(form) }}
+            {{ form_row(form.q) }}
+            {{ form_row(form.campus) }}
+            <button type="submit">Rechercher</button>
+            {{ form_end(form) }}
+        </div>
+
+        {# Tableau des résultats #}
+        <table border="1" style="width: 100%; border-collapse: collapse;">
+            <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Date</th>
+                <th>Campus</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for sortie in sorties %}
+                <tr>
+                    <td>{{ sortie.nom }}</td>
+                    <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
+                    <td>{{ sortie.campus.nom }}</td>
+                    <td>
+                        <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucune sortie trouvée.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
