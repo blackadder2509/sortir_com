@@ -1,23 +1,93 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Inscription{% endblock %}
+
 {% block body %}
+    <div class="container mt-3">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
     <div class="container mt-5">
-        <h1>Créer un nouvel utilisateur</h1>
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-7">
+                <div class="card shadow">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="mb-0">Créer un compte</h3>
+                    </div>
+                    <div class="card-body">
+                        {# On utilise 'form' pour correspondre au contrôleur #}
+                        {{ form_start(form, {'attr': {'novalidate': 'novalidate'}}) }}
 
-        {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.username, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.email, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
 
-        <div class="card bg-light mb-3">
-            <div class="card-body">
-                {{ form_row(registrationForm.roles) }}
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.prenom, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.nom, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_row(form.campus, {
+                                'label': 'Votre Campus rattaché',
+                                'attr': {'class': 'form-select'}
+                            }) }}
+                        </div>
+
+                        {# Affichage des cases à cocher pour les rôles #}
+                        <div class="mb-3 p-3 border rounded bg-light">
+                            <strong>{{ form_label(form.roles) }}</strong>
+                            <div class="mt-2">
+                                {{ form_widget(form.roles) }}
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.plainPassword.first, {
+                                    'label': 'Mot de passe',
+                                    'attr': {'class': 'form-control'}
+                                }) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.plainPassword.second, {
+                                    'label': 'Confirmation',
+                                    'attr': {'class': 'form-control'}
+                                }) }}
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="bi bi-person-plus-fill"></i> Créer l'utilisateur
+                            </button>
+                        </div>
+
+                        {# form_end rendra les champs cachés comme le jeton CSRF #}
+                        {{ form_end(form) }}
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="{{ path('app_login') }}" class="text-secondary text-decoration-none">Retour à la connexion</a>
+                    </div>
+                </div>
             </div>
         </div>
-
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Mot de passe'
-        }) }}
-
-        <button type="submit" class="btn btn-primary">Enregistrer l'utilisateur</button>
-        {{ form_end(registrationForm) }}
     </div>
 {% endblock %}

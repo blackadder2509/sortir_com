@@ -39,7 +39,8 @@ class UserType extends AbstractType
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'nom',
-                'disabled' => true, // L'utilisateur voit son campus mais ne peut pas le changer
+                'attr' => ['readonly' => true], // L'utilisateur ne peut pas changer, mais le navigateur envoie la donnée
+                'disabled' => false,
             ])
             // Gestion spéciale du mot de passe
             ->add('plainPassword', RepeatedType::class, [
