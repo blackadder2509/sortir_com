@@ -3,16 +3,19 @@
 namespace App\Entity;
 
 use AllowDynamicProperties;
+use App\Entity\Campus;
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\Campus;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
-#[AllowDynamicProperties]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
+#[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])] // Ajout SQL
+#[UniqueEntity(fields: ['email'], message: 'Cet email est déjà utilisé.')] // Ajout Validateur
+#[UniqueEntity(fields: ['username'], message: 'Ce pseudo est déjà utilisé.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -35,6 +38,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\NotBlank]
     #[Assert\Length(min: 8, max: 50, minMessage: "Minimum 8 caractères svp")]
     private ?string $username = null;
+    #[ORM\ManyToOne(targetEntity: Campus::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Campus $campus = null;
 
     #[ORM\Column(length: 50)]
     private ?string $nom = null;
@@ -55,9 +61,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->id;
     }
-    #[ORM\ManyToOne(targetEntity: Campus::class)]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Campus $campus = null;
+
 
     public function getEmail(): ?string
     {

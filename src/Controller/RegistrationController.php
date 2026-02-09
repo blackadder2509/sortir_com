@@ -12,7 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-//#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_ADMIN')]
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
@@ -36,11 +36,11 @@ class RegistrationController extends AbstractController
 
             //return $this->redirectToRoute('app_campus');
             $this->addFlash('success', 'Utilisateur créé avec succès !');
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_register');
         }
 
         return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form,
+            'form' => $form->createView(),
         ]);
     }
 }
