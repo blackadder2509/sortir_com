@@ -48,7 +48,7 @@ final class UserController extends AbstractController
             'form' => $form,
         ]);
     }
-
+    
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
