@@ -81,6 +81,9 @@ class Sortie
     public function getCampus(): ?Campus { return $this->campus; }
     public function setCampus(?Campus $campus): static { $this->campus = $campus; return $this; }
 
+    public function getdurée(): Collection { return $this->infosSortie; }
+    public function setdurée(Collection $infosSortie): static { $this->infosSortie = $infosSortie; return $this; }
+
     /**
      * @return Collection<int, User>
      */
