@@ -8,25 +8,7 @@
             {% if error %}
                 <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
-
-            {# Sécurité : Si l'utilisateur est déjà connecté, on lui propose de se déconnecter ou on le redirige #}
-            {% if app.user %}
-                <div class="mb-3 p-4 border rounded bg-light text-center">
-                    <p>Vous êtes déjà connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>.</p>
-
-                    <div class="d-grid gap-2 d-md-block">
-                        {# Le bouton pour aller aux sorties #}
-                        <a href="{{ path('app_sortie_index') }}" class="btn btn-primary">
-                            <i class="fas fa-arrow-left"></i> Retour aux sorties
-                        </a>
-
-                        {# Le lien de déconnexion pour changer de compte #}
-                        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">
-                            Déconnexion
-                        </a>
-                    </div>
-                </div>
-            {% else %}
+            
                 <h1 class="h3 mb-3 font-weight-normal">Veuillez vous connecter</h1>
 
                 <label for="username">Email ou Pseudo</label>
