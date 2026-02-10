@@ -24,7 +24,7 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
-    public const LOGIN_ROUTE = 'app_login';
+    public const string LOGIN_ROUTE = 'app_login';
 
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
@@ -34,8 +34,9 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $identifier = $request->getPayload()->getString('_username');
-        $password = $request->getPayload()->getString('_password');
+        $identifier = $request->request->get('_username', '');
+        $password = $request->request->get('_password', '');
+        $csrfToken = $request->request->get('_csrf_token');
 
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $identifier);
 
@@ -55,8 +56,8 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
             }),
             new PasswordCredentials($password),
             [
-                new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),
-                new RememberMeBadge(), // Point n°2 : Se souvenir de moi
+                new CsrfTokenBadge('authenticate', $csrfToken),
+                new RememberMeBadge(),
             ]
         );
     }

@@ -32,7 +32,7 @@ class AppFixtures extends Fixture
         $admin->setUsername('admin');
         $admin->setNom('Dupont');
         $admin->setPrenom('Jean');
-        $admin->setRoles(['ROLE_USER']);
+        $admin->setRoles(['ROLE_ADMIN']);
         $admin->setCampus($campus); // FIX : On relie l'utilisateur au campus
 
         $password = $this->hasher->hashPassword($admin, '123456');
