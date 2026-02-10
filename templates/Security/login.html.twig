@@ -11,9 +11,20 @@
 
             {# Sécurité : Si l'utilisateur est déjà connecté, on lui propose de se déconnecter ou on le redirige #}
             {% if app.user %}
-                <div class="mb-3">
-                    Vous êtes déjà connecté en tant que {{ app.user.userIdentifier }},
-                    <a href="{{ path('app_logout') }}">Déconnexion</a>
+                <div class="mb-3 p-4 border rounded bg-light text-center">
+                    <p>Vous êtes déjà connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>.</p>
+
+                    <div class="d-grid gap-2 d-md-block">
+                        {# Le bouton pour aller aux sorties #}
+                        <a href="{{ path('app_sortie_index') }}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> Retour aux sorties
+                        </a>
+
+                        {# Le lien de déconnexion pour changer de compte #}
+                        <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">
+                            Déconnexion
+                        </a>
+                    </div>
                 </div>
             {% else %}
                 <h1 class="h3 mb-3 font-weight-normal">Veuillez vous connecter</h1>
@@ -24,8 +35,14 @@
                 <label for="password" class="mt-2">Mot de passe</label>
                 <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
 
+
                 {# Le fameux jeton CSRF #}
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <div class="checkbox mb-3">
+                    <label>
+                        <input type="checkbox" name="_remember_me"> Se souvenir de moi
+                    </label>
+                </div>
 
                 <button class="btn btn-lg btn-primary mt-3" type="submit">
                     Se connecter

@@ -27,6 +27,11 @@ security:
                 # enable_csrf: true
             custom_authenticator: App\Security\UserAuthenticator
             user_checker: App\Security\UserChecker
+            remember_me:
+                secret: '%kernel.secret%' # Indispensable pour chiffrer le cookie
+                lifetime: 604800           # Durée en secondes (ici 1 semaine)
+                path: /                # Le cookie est valide sur tout le site
+
 
             logout:
                 path: app_logout
