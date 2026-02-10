@@ -53,9 +53,20 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            // 1. Assigner l'organisateur (toi)
+            $sortie->setOrganisateur($this->getUser());
+
+            // 2. Assigner l'état "En création"
+            $etat = $entityManager->getRepository(Etat::class)->findOneBy(['libelle' => 'En création']);
+            if ($etat) {
+                $sortie->setEtat($etat);
+            }
+
             $entityManager->persist($sortie);
             $entityManager->flush();
-            return $this->redirectToRoute('app_sortie_index');
+
+             return $this->redirectToRoute('app_sortie_index');
         }
 
         return $this->render('sortie/new.html.twig', [
