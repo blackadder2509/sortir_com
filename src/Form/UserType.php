@@ -7,6 +7,7 @@ use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
@@ -52,6 +53,11 @@ class UserType extends AbstractType
                 'first_options'  => ['label' => 'Nouveau mot de passe'],
                 'second_options' => ['label' => 'Confirmation'],
                 'invalid_message' => 'Les mots de passe doivent être identiques.',
+            ])
+            ->add('photo', FileType::class, [
+                'label' => 'Ma photo',
+                'mapped' => false,
+                'required' => false,
             ])
         ;
 

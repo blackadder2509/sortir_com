@@ -43,6 +43,16 @@ final class UserController extends AbstractController
                 $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
             }
 
+            $photoFile = $form->get('photo')->getData();
+            if ($photoFile) {
+
+                $newFilename = uniqid().'.'.$photoFile->guessExtension();
+
+                $photoFile->move($this->getParameter('photo_directory'), $newFilename);
+
+                $user->setPhoto($newFilename);
+            }
+
             $entityManager->flush();
             $this->addFlash('success', 'Votre profil a été mis à jour.');
             return $this->redirectToRoute('app_user_show', ['id' => $user->getId()]);
@@ -50,7 +60,7 @@ final class UserController extends AbstractController
 
         return $this->render('user/edit.html.twig', [
             'user' => $user,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 
