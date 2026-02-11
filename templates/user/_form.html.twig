@@ -20,13 +20,13 @@
 
 {# Le champ RepeatedType génère automatiquement les deux cases #}
     {{ form_row(form.plainPassword) }}
-<div>
+<div>{#
     {% if app.user.photo %}
         <img src="{{ asset('photo/' ~ app.user.photo) }}" class="img-fluid rounded" alt="Photo">
     {% else %}
-        {# Image par défaut si l'utilisateur n'en a pas encore #}
+
         <img src="{{ asset('img/avatar.png') }}" class="img-fluid" alt="Avatar">
-    {% endif %}
+    {% endif %} #}
 </div>
 <div class="d-grid gap-2 mt-4">
     <button class="btn btn-primary btn-lg">{{ button_label|default('Enregistrer') }}</button>
