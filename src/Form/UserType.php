@@ -18,6 +18,8 @@ class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // $isAdmin = $options['is_admin'];
+
         $builder
             ->add('username', TextType::class, [
                 'label' => 'Pseudo'
@@ -35,7 +37,7 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Email'
             ])
-            // On ajoute le Campus (souvent en lecture seule pour l'utilisateur)
+            // On ajoute le Campus
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'nom',

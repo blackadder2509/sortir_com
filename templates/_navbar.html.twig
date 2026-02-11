@@ -1,24 +1,49 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+{# templates/base.html.twig #}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container-fluid">
         <a class="navbar-brand" href="{{ path('app_sortie_index') }}">Sortir.com</a>
 
-        <div class="navbar-nav">
-            {# Liens accessibles à tous #}
-            <a class="nav-link" href="{{ path('app_sortie_index') }}">Accueil</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-            {% if app.user %}
-                {# Liens pour utilisateurs connectés #}
-                <a class="nav-link" href="{{ path('app_user_profile_edit') }}">Mon Profil</a>
-
-                {% if is_granted('ROLE_ADMIN') %}
-                    <a class="nav-link text-warning" href="{{ path('app_campus') }}">Gestion Campus</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                {# LIENS VISIBLES UNIQUEMENT SI CONNECTÉ #}
+                {% if app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_sortie_index') }}">Accueil</a>
+                    </li>
+                    {# Tu pourras ajouter ici 'Créer une sortie', etc. #}
                 {% endif %}
+            </ul>
 
-                <a class="nav-link btn btn-outline-danger btn-sm ms-2" href="{{ path('app_logout') }}">Déconnexion</a>
-            {% else %}
-                {# Liens pour visiteurs #}
-                <a class="nav-link btn btn-outline-primary btn-sm ms-2" href="{{ path('app_login') }}">Connexion</a>
-            {% endif %}
+            <ul class="navbar-nav ms-auto">
+                {% if app.user %}
+                    {# MENU PROFIL #}
+                    <li class="nav-item">
+                        <span class="navbar-text me-3">
+                            Bienvenue, <strong>{{ app.user.username }}</strong>
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path('app_user_profile_edit') }}">
+                            <i class="fas fa-user-circle"></i> Mon profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-light btn-sm ms-lg-2" href="{{ path('app_logout') }}">
+                            Déconnexion
+                        </a>
+                    </li>
+                {% else %}
+                    {# LIEN SI NON CONNECTÉ #}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
+                    </li>
+                {% endif %}
+            </ul>
         </div>
     </div>
 </nav>

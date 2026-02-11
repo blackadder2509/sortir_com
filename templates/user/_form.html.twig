@@ -1,4 +1,27 @@
+{# templates/user/_form.html.twig #}
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+<div class="row">
+    <div class="col-md-6">{{ form_row(form.username) }}</div>
+    <div class="col-md-6">{{ form_row(form.email) }}</div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">{{ form_row(form.prenom) }}</div>
+    <div class="col-md-6">{{ form_row(form.nom) }}</div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">{{ form_row(form.telephone) }}</div>
+    <div class="col-md-6">{{ form_row(form.campus) }}</div>
+</div>
+
+<hr class="my-4">
+<h5 class="text-muted mb-3">Sécurité</h5>
+
+{# Le champ RepeatedType génère automatiquement les deux cases #}
+    {{ form_row(form.plainPassword) }}
+
+<div class="d-grid gap-2 mt-4">
+    <button class="btn btn-primary btn-lg">{{ button_label|default('Enregistrer') }}</button>
+</div>
 {{ form_end(form) }}

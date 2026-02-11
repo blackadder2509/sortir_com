@@ -8,7 +8,7 @@
             {% if error %}
                 <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
-            
+
                 <h1 class="h3 mb-3 font-weight-normal">Veuillez vous connecter</h1>
 
                 <label for="username">Email ou Pseudo</label>
@@ -29,7 +29,6 @@
                 <button class="btn btn-lg btn-primary mt-3" type="submit">
                     Se connecter
                 </button>
-            {% endif %}
         </form>
     </div>
 {% endblock %}
