@@ -3,43 +3,36 @@
 namespace App\Repository;
 
 use App\Entity\Sortie;
-use App\Data\SearchData;
+use App\Model\SearchData;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @extends ServiceEntityRepository<Sortie>
- */
 class SortieRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
+    public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Sortie::class);
     }
 
-    /**
-     * Récupère les sorties en lien avec une recherche
-     * @return Sortie[]
-     */
-    public function findSearch(SearchData $searchData): array
+    public function findSearch(SearchData $search, $user): array
     {
-        $query = $this
-            ->createQueryBuilder('s')
-            ->select('c', 's')
-            ->join('s.campus', 'c');
+        $qb = $this->createQueryBuilder('s')
+            ->addSelect('e', 'c', 'o')
+            ->join('s.etat', 'e')
+            ->join('s.campus', 'c')
+            ->join('s.organisateur', 'o');
 
-        if (!empty($searchData->q)) {
-            $query = $query
-                ->andWhere('s.nom LIKE :q')
-                ->setParameter('q', "%{$searchData->q}%");
+        if (!empty($search->q)) {
+            $qb->andWhere('s.nom LIKE :q')->setParameter('q', "%{$search->q}%");
         }
 
-        if (!empty($searchData->campus)) {
-            $query = $query
-                ->andWhere('s.campus = :campus')
-                ->setParameter('campus', $searchData->campus);
+        if ($search->campus) {
+            $qb->andWhere('c = :campus')->setParameter('campus', $search->campus);
         }
 
-        return $query->getQuery()->getResult();
+        if ($search->isOrganisateur) {
+            $qb->andWhere('s.organisateur = :user')->setParameter('user', $user);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

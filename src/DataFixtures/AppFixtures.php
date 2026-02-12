@@ -39,6 +39,11 @@ class AppFixtures extends Fixture
         $admin->setPassword($password);
         $manager->persist($admin);
 
+        $user = new User();
+        $user->setEmail("admin@test.com");
+        $user->setPassword($this->passwordHasher->hashPassword($user, "admin123"));
+        $manager->persist($user);
+
         // 3. Création des États
         $nomsEtats = ['En création', 'Ouverte', 'Clôturée', 'Passée'];
         $objetsEtats = [];

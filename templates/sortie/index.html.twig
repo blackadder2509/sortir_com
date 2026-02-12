@@ -1,100 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des sorties{% endblock %}
-
 {% block body %}
     <div class="container mt-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h1>Liste des sorties</h1>
-            <a href="{{ path('app_sortie_new') }}" class="btn btn-primary">+ Créer une sortie</a>
-        </div>
+        <h1 class="mb-4">Filtrer les sorties</h1>
 
-        {# --- MESSAGE FLASH (Succès) --- #}
-        {% for message in app.flashes('success') %}
-            <div class="alert alert-success">
-                {{ message }}
-            </div>
-        {% endfor %}
-
-        {# --- FILTRE --- #}
+        {# Section Recherche #}
         <div class="card bg-light mb-4">
             <div class="card-body">
-                <h3>Filtrer les sorties</h3>
                 {{ form_start(form) }}
                 <div class="row">
-                    <div class="col-md-4">
-                        {{ form_row(form.q, {'label': false, 'attr': {'placeholder': 'Rechercher...'}}) }}
+                    <div class="col-md-6">
+                        {{ form_row(form.campus) }}
+                        {{ form_row(form.q) }}
+                        <div class="row">
+                            <div class="col-6">{{ form_row(form.datemin) }}</div>
+                            <div class="col-6">{{ form_row(form.datemax) }}</div>
+                        </div>
                     </div>
-                    <div class="col-md-4">
-                        {{ form_row(form.campus, {'label': false}) }}
-                    </div>
-                    <div class="col-md-4">
-                        <button type="submit" class="btn btn-dark">Rechercher</button>
+                    <div class="col-md-6">
+                        <div class="mt-2">
+                            {{ form_row(form.isOrganisateur) }}
+                            {{ form_row(form.isInscrit) }}
+                            {{ form_row(form.isNotInscrit) }}
+                            {{ form_row(form.isPassee) }}
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Rechercher</button>
                     </div>
                 </div>
                 {{ form_end(form) }}
             </div>
         </div>
 
-        {# --- TABLEAU --- #}
-        <table class="table table-striped table-hover align-middle">
-            <thead class="table-dark">
-            <tr>
-                <th>Nom</th>
-                <th>Date</th>
-                <th>Clôture</th>
-                <th>Inscrits</th>
-                <th>État</th>
-                <th>Inscrit</th>
-                <th>Organisateur</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for sortie in sorties %}
-                <tr>
-                    <td>{{ sortie.nom }}</td>
-                    <td>{{ sortie.dateHeureDebut|date('d/m/Y H:i') }}</td>
-                    <td>{{ sortie.dateLimiteInscription|date('d/m/Y') }}</td>
-                    <td>
-                        {# C'est ici que ça plantait avant. Maintenant ça marche grâce au getter dans Sortie.php #}
-                        {{ sortie.inscriptions|length }} / {{ sortie.nbInscriptionsMax }}
-                    </td>
-                    <td>
-                        {% if sortie.etat %}
-                            <span class="badge bg-info text-dark">{{ sortie.etat.libelle }}</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        {# Test si l'user connecté est dans la liste des inscrits #}
-                        {% if app.user in sortie.inscriptions %}
-                            X
-                        {% else %}
-                            -
-                        {% endif %}
-                    </td>
-                    <td>
-                        {% if sortie.organisateur %}
-                            <a href="#">{{ sortie.organisateur.email }}</a>
-                        {% else %}
-                            <span class="text-muted">Inconnu</span>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <a href="{{ path('app_sortie_show', {'id': sortie.id}) }}" class="btn btn-sm btn-light">Afficher</a>
+        {# Tableau des sorties (ton code existant) #}
+        <div class="d-flex justify-content-between mb-3">
+            <h2>Résultats</h2>
+            <a href="{{ path('app_sortie_new') }}" class="btn btn-success">+ Créer</a>
+        </div>
 
-                        {# Affiche Modifier uniquement si je suis l'organisateur #}
-                        {% if app.user == sortie.organisateur %}
-                            <a href="{{ path('app_sortie_edit', {'id': sortie.id}) }}" class="btn btn-sm btn-secondary">Modifier</a>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="8" class="text-center">Aucune sortie trouvée</td>
-                </tr>
-            {% endfor %}
-            </tbody>
+        <table class="table table-hover">
+            {# ... le contenu de ton tableau ... #}
         </table>
     </div>
 {% endblock %}

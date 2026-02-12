@@ -21,6 +21,30 @@
 
             <ul class="navbar-nav ms-auto">
                 {% if app.user %}
+                {# Liens pour utilisateurs connectés #}
+                <a class="nav-link" href="{{ path('app_user_profile_edit') }}">Mon Profil</a>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a class="nav-link text-warning" href="{{ path('app_campus') }}">Gestion Campus</a>
+                {% endif %}
+
+                <a class="nav-link btn btn-outline-danger btn-sm ms-2" href="{{ path('app_logout') }}">Déconnexion</a>
+            <ul class="navbar-nav ms-auto">
+                {% if app.user %}
+                    {# MENU PROFIL #}
+                    <li class="nav-item">
+                        <span class="navbar-text me-3">
+Bienvenue, <strong>{{ app.user.pseudo ?: app.user.email }}</strong>                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ path('app_user_profile_edit') }}">
+                            <i class="fas fa-user-circle"></i> Mon profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-light btn-sm ms-lg-2" href="{{ path('app_logout') }}">
+                            Déconnexion
+                        </a>
+                    </li>
                     {# MENU PROFIL #}
                     <li class="nav-item">
                         <span class="navbar-text me-3">

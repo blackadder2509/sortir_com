@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container mt-4">
+        <h1>Annuler la sortie : {{ sortie.nom }}</h1>
+
+        <div class="alert alert-info">
+            <strong>Détails :</strong> {{ sortie.dateHeureDebut|date('d/m/Y H:i') }} à {{ sortie.lieu.nom }}
+        </div>
+
+        <form action="{{ path('sortie_annuler', {'id': sortie.id}) }}" method="post">
+            <div class="form-group mb-3">
+                <label for="motif">Motif de l'annulation (obligatoire) :</label>
+                <textarea name="motif" id="motif" class="form-control" rows="4" required
+                          placeholder="Ex: Conditions météo défavorables..."></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-danger">Confirmer l'annulation</button>
+            <a href="{{ path('sortie_liste') }}" class="btn btn-secondary">Retour</a>
+        </form>
+    </div>
+{% endblock %}
