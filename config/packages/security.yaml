@@ -50,9 +50,17 @@ security:
     # Note: Only the *first* matching rule is applied
     access_control:
        # access_control:
-        - { path: ^/$, roles: PUBLIC_ACCESS }       # La racine (le login) est publique
-        - { path: ^/login, roles: PUBLIC_ACCESS }   # L'URL /login aussi
-        - { path: ^/register, roles: ROLE_ADMIN }   # Inscription réservée à l'admin
+        # 1. On autorise les routes publiques précises
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+
+        # 2. On restreint l'admin AVANT de restreindre le reste du site
+        - { path: ^/register, roles: ROLE_ADMIN }
+
+        # 3. La racine : si c'est ta page de login, PUBLIC_ACCESS est bon.
+        # Si c'est ton tableau de bord, mets ROLE_USER.
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+
+        # 4. Enfin, on protège tout le reste
         - { path: ^/, roles: ROLE_USER }
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
